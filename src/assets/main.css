@@ -1,0 +1,1486 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens lifted from the original styles.css so the Tailwind rebuild
+   keeps the Media Box identity. Two palettes: the public request hub and the
+   dark `ops` admin theme.
+--------------------------------------------------------------------------- */
+@theme {
+  /* Fraunces is display-only; everything else is Manrope. */
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+
+  /* Brand */
+  --color-brand-500: #0f7a76;
+  --color-brand-700: #0a5d61;
+  --color-accent-500: #cf6d4c;
+  --color-gold-500: #c49a46;
+
+  /* Public ink + paper */
+  --color-ink: #12212b;
+  --color-ink-muted: #5f6e77;
+  --color-paper-top: #edf3ef;
+  --color-paper: #f7f3ea;
+  --color-paper-bottom: #f4ede3;
+
+  /* Public surfaces: the glass system is translucent white over a tinted page. */
+  --color-surface: rgb(255 255 255 / 0.8);
+  --color-surface-strong: rgb(255 255 255 / 0.92);
+  --color-surface-muted: rgb(255 255 255 / 0.7);
+  --color-surface-subtle: rgb(255 255 255 / 0.62);
+  --color-surface-faint: rgb(255 255 255 / 0.5);
+  --color-surface-tint: rgb(247 249 250 / 0.92);
+
+  /* Public borders. Note the glass border is white, not ink. */
+  --color-line: rgb(18 33 43 / 0.1);
+  --color-line-strong: rgb(18 33 43 / 0.16);
+  --color-line-soft: rgb(18 33 43 / 0.08);
+  --color-line-tab: rgb(18 33 43 / 0.14);
+  --color-line-glass: rgb(255 255 255 / 0.44);
+  --color-line-focus: rgb(15 122 118 / 0.36);
+
+  --color-danger-500: #c64343;
+  --color-danger-700: #a84f31;
+
+  /* Ops page + surfaces */
+  --color-ops-bg-top: #11161b;
+  --color-ops-bg-mid: #151b22;
+  --color-ops-bg-bottom: #10151a;
+  --color-ops-line: rgb(255 255 255 / 0.08);
+  --color-ops-line-input: rgb(255 255 255 / 0.1);
+  --color-ops-line-ghost: rgb(255 255 255 / 0.12);
+  --color-ops-line-active: rgb(15 122 118 / 0.42);
+  --color-ops-surface-2: rgb(255 255 255 / 0.02);
+  --color-ops-surface-3: rgb(255 255 255 / 0.03);
+  --color-ops-surface-5: rgb(255 255 255 / 0.05);
+  --color-ops-surface-6: rgb(255 255 255 / 0.06);
+
+  /* Ops ink: one base colour at several alphas. */
+  --color-ops-ink: #edf1f4;
+  --color-ops-ink-hi: #f7fafc;
+  --color-ops-ink-hi2: #f3f6f8;
+  --color-ops-ink-76: rgb(237 241 244 / 0.76);
+  --color-ops-ink-70: rgb(237 241 244 / 0.7);
+  --color-ops-ink-68: rgb(237 241 244 / 0.68);
+  --color-ops-ink-64: rgb(237 241 244 / 0.64);
+  --color-ops-ink-62: rgb(237 241 244 / 0.62);
+  --color-ops-ink-60: rgb(237 241 244 / 0.6);
+  --color-ops-ink-58: rgb(237 241 244 / 0.58);
+  --color-ops-ink-56: rgb(237 241 244 / 0.56);
+  --color-ops-ink-38: rgb(237 241 244 / 0.38);
+  --color-ops-kicker: #88ccc9;
+  --color-ops-chip-gold: #f3cd78;
+
+  /* Status palette, shared by pills and the inline table selects. */
+  --color-info-bg: rgb(64 130 255 / 0.14);
+  --color-info-text: #89b4ff;
+  --color-warn-bg: rgb(255 184 77 / 0.16);
+  --color-warn-text: #ffc96d;
+  --color-danger-bg: rgb(230 95 95 / 0.16);
+  --color-danger-text: #ff9a9a;
+  --color-success-bg: rgb(66 176 109 / 0.18);
+  --color-success-text: #7ed89f;
+
+  /* Validated against the ops card surface (#1a2027): 5.05:1. */
+  --color-chart-bar: #00a096;
+
+  /* Public buttons are pills; ops buttons are 14px rounded rectangles. */
+  --radius-xs: 14px;
+  --radius-sm: 16px;
+  --radius-md: 18px;
+  --radius-lg: 20px;
+  --radius-xl: 22px;
+  --radius-2xl: 24px;
+  --radius-3xl: 28px;
+  --radius-4xl: 32px;
+
+  --shadow-card: 0 26px 60px rgb(18 33 43 / 0.12);
+  --shadow-card-lg: 0 30px 80px rgb(18 33 43 / 0.18);
+  --shadow-ops-card: 0 30px 80px rgb(0 0 0 / 0.26);
+  --shadow-ops-tab: 0 24px 60px rgb(0 0 0 / 0.18);
+  --shadow-ops-tab-active: 0 22px 56px rgb(15 122 118 / 0.14);
+  --shadow-btn: 0 18px 34px rgb(15 122 118 / 0.18);
+  --shadow-btn-ops: 0 18px 34px rgb(15 122 118 / 0.22);
+  --shadow-brand-mark: 0 16px 34px rgb(15 122 118 / 0.2);
+  --shadow-select-lift: 0 18px 34px rgb(15 122 118 / 0.08);
+
+  --tracking-tightest: -0.03em;
+  --tracking-tight-sm: -0.02em;
+  --tracking-wide-sm: 0.08em;
+  --tracking-wider-sm: 0.12em;
+  --tracking-widest-sm: 0.16em;
+
+  --leading-hero: 0.95;
+  --leading-prose: 1.75;
+
+  /* Mobile-first inversions of the original desktop-first 760/900/1100/1200. */
+  --breakpoint-sm: 761px;
+  --breakpoint-md: 901px;
+  --breakpoint-lg: 1101px;
+  --breakpoint-xl: 1201px;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background:
+      radial-gradient(circle at top left, rgb(15 122 118 / 0.12), transparent 26%),
+      radial-gradient(circle at 100% 18%, rgb(207 109 76 / 0.12), transparent 22%),
+      linear-gradient(180deg, #edf3ef 0%, #f7f3ea 46%, #f4ede3 100%);
+    background-attachment: fixed;
+  }
+
+  body[data-theme="ops"] {
+    color: var(--color-ops-ink);
+    background:
+      radial-gradient(circle at top left, rgb(15 122 118 / 0.18), transparent 20%),
+      radial-gradient(circle at top right, rgb(207 109 76 / 0.12), transparent 18%),
+      linear-gradient(180deg, #11161b 0%, #151b22 45%, #10151a 100%);
+  }
+
+  /* Tailwind's preflight sets headings to font-size: inherit, which would
+     silently shrink every heading the original left at its browser default. */
+  h1, h2, h3, h4 {
+    margin: 0;
+    font-family: var(--font-display);
+  }
+
+  h1 { font-size: 2em; }
+  h2 { font-size: 1.5em; }
+  h3 { font-size: 1.17em; }
+  h4 { font-size: 1em; }
+
+  button {
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  button, a {
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+
+  /* The original had no visible focus ring on buttons or links. */
+  :focus-visible {
+    outline: 2px solid rgb(15 122 118 / 0.55);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* --- Public shell ------------------------------------------------------ */
+
+  /* Fixed sheen the shells sit above; the z-index pairing is load-bearing. */
+  .ambient-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(135deg, rgb(255 255 255 / 0.28), transparent 42%),
+      linear-gradient(320deg, rgb(255 255 255 / 0.18), transparent 36%);
+  }
+
+  .app-shell {
+    position: relative;
+    z-index: 1;
+    width: min(100% - 20px, 100%);
+    margin: 0 auto;
+    padding: 16px 0 56px;
+  }
+
+  @media (width >= 761px) {
+    .app-shell {
+      width: min(1240px, calc(100% - 32px));
+      padding: 24px 0 72px;
+    }
+  }
+
+  /* The glass recipe: translucent gradient + WHITE hairline + blur. All three
+     are needed or the frosted effect collapses. */
+  .glass-card {
+    border: 1px solid var(--color-line-glass);
+    border-radius: var(--radius-4xl);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.74), rgb(255 251 246 / 0.9));
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(20px);
+  }
+
+  .hero-panel-clean {
+    display: grid;
+    align-items: center;
+    min-height: 420px;
+    padding: clamp(26px, 4vw, 42px);
+    background:
+      radial-gradient(circle at top right, rgb(207 109 76 / 0.12), transparent 24%),
+      radial-gradient(circle at left center, rgb(15 122 118 / 0.12), transparent 26%),
+      linear-gradient(180deg, rgb(255 255 255 / 0.82), rgb(255 251 246 / 0.95));
+  }
+
+  .form-shell {
+    margin-top: 24px;
+    padding: clamp(24px, 4vw, 38px);
+  }
+
+  .eyebrow {
+    margin: 0 0 14px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: var(--tracking-wider-sm);
+    text-transform: uppercase;
+    color: var(--color-brand-700);
+  }
+
+  .section-heading {
+    max-width: 760px;
+  }
+
+  .section-heading h1 {
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: var(--leading-hero);
+    letter-spacing: var(--tracking-tightest);
+  }
+
+  .section-heading h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: var(--tracking-tightest);
+  }
+
+  .section-heading p,
+  .support-copy {
+    line-height: var(--leading-prose);
+    color: var(--color-ink-muted);
+  }
+
+  .form-section {
+    padding: 24px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-3xl);
+    background: var(--color-surface);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .form-section:hover {
+    transform: translateY(-2px);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  /* The "Q1" / "Q2" badge. */
+  .section-title > span {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    min-width: 52px;
+    min-height: 52px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgb(15 122 118 / 0.14), rgb(207 109 76 / 0.18));
+    color: var(--color-brand-700);
+    font-family: var(--font-sans);
+    font-weight: 800;
+  }
+
+  .section-title h3 {
+    font-size: clamp(1.35rem, 2vw, 2rem);
+    letter-spacing: var(--tracking-tightest);
+  }
+}
+
+@layer components {
+  /* --- Public form controls ---------------------------------------------- */
+
+  .field-grid {
+    display: grid;
+    gap: 18px;
+  }
+
+  @media (width >= 761px) {
+    .field-grid.two-col {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  .field {
+    display: grid;
+    gap: 10px;
+  }
+
+  .field > span {
+    font-weight: 700;
+  }
+
+  .required-mark {
+    color: var(--color-danger-500);
+  }
+
+  .field-help {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--color-ink-muted);
+  }
+
+  .control {
+    width: 100%;
+    min-height: 54px;
+    padding: 14px 16px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font-family: inherit;
+    font-size: 1rem;
+  }
+
+  textarea.control {
+    min-height: 130px;
+    resize: vertical;
+  }
+
+  input[type="file"].control {
+    min-height: auto;
+    padding: 12px;
+    background: var(--color-surface-strong);
+  }
+
+  .control:focus {
+    outline: 2px solid rgb(15 122 118 / 0.2);
+    border-color: var(--color-line-focus);
+  }
+
+  .choice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .choice-card {
+    display: grid;
+    gap: 10px;
+    padding: 22px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-2xl);
+    background: var(--color-surface-muted);
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+
+  .choice-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .choice-card strong {
+    font-size: 1.05rem;
+  }
+
+  .choice-card small {
+    line-height: 1.6;
+    color: var(--color-ink-muted);
+  }
+
+  .choice-card.is-selected {
+    border-color: rgb(15 122 118 / 0.28);
+    background: linear-gradient(135deg, rgb(15 122 118 / 0.12), rgb(207 109 76 / 0.14));
+    box-shadow: var(--shadow-select-lift);
+  }
+
+  /* --- Progress strip ----------------------------------------------------- */
+
+  .progress-strip {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin: 22px 0 0;
+  }
+
+  @media (width >= 761px) {
+    .progress-strip {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .progress-step {
+    display: grid;
+    place-items: center;
+    min-height: 46px;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.72);
+    color: var(--color-ink-muted);
+    font-weight: 800;
+  }
+
+  .progress-step.is-active {
+    background: linear-gradient(135deg, rgb(15 122 118 / 0.16), rgb(207 109 76 / 0.18));
+    color: var(--color-brand-700);
+  }
+
+  .progress-step.is-complete {
+    background: linear-gradient(135deg, #0f7a76, #0a5d61);
+    color: #fff;
+  }
+
+  /* --- Public buttons: pills ---------------------------------------------- */
+
+  .btn-base {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-family: inherit;
+    font-size: 1rem;
+  }
+
+  .primary-button {
+    background: linear-gradient(135deg, #0f7a76, #cf6d4c);
+    color: #fff;
+    box-shadow: var(--shadow-btn);
+  }
+
+  .ghost-button {
+    border: 1px solid var(--color-line);
+    background: rgb(255 255 255 / 0.74);
+    color: var(--color-ink);
+  }
+
+  .primary-button:hover:not(:disabled),
+  .ghost-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  /* The original shipped the Print button `disabled` with no disabled styling. */
+  .btn-base:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .status-message {
+    margin: 0;
+    font-weight: 600;
+    color: var(--color-brand-700);
+  }
+
+  .status-message.is-error {
+    color: var(--color-danger-700);
+  }
+
+  /* Ops theme override: the public colours are near-black on the dark card. */
+  [data-theme="ops"] .status-message {
+    color: var(--color-ops-kicker);
+  }
+
+  [data-theme="ops"] .status-message.is-error {
+    color: var(--color-danger-text);
+  }
+
+  /* --- Topbar ------------------------------------------------------------- */
+
+  .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .brand-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+
+  .brand-mark-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #0f7a76, #cf6d4c);
+    box-shadow: 0 0 0 10px rgb(15 122 118 / 0.08);
+  }
+
+  .login-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 8px 16px;
+    border: 1px solid var(--color-line-tab);
+    border-radius: 999px;
+    background: var(--color-surface-muted);
+    color: var(--color-brand-700);
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-decoration: none;
+  }
+}
+
+@layer components {
+  /* --- Uploads ------------------------------------------------------------ */
+
+  .upload-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+
+  .upload-empty-state {
+    display: grid;
+    place-items: center;
+    min-height: 120px;
+    padding: 20px;
+    border: 1px dashed var(--color-line-strong);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-faint);
+    color: var(--color-ink-muted);
+    text-align: center;
+  }
+
+  .upload-card {
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: rgb(255 255 255 / 0.78);
+  }
+
+  .upload-card-image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .upload-card-meta {
+    display: grid;
+    gap: 4px;
+    padding: 14px;
+  }
+
+  .upload-card-meta strong {
+    word-break: break-word;
+  }
+
+  .upload-card-meta span {
+    font-size: 0.9rem;
+    color: var(--color-ink-muted);
+  }
+
+  .upload-card.is-document {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+  }
+
+  .upload-card-document {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 100%;
+    min-height: 72px;
+    background: rgb(15 122 118 / 0.12);
+    color: var(--color-brand-700);
+    font-weight: 800;
+  }
+
+  /* --- Speaker repeater ---------------------------------------------------- */
+
+  .speaker-repeater {
+    display: grid;
+    gap: 16px;
+    padding: 18px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-2xl);
+    background: var(--color-surface-subtle);
+  }
+
+  .speaker-repeater-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  @media (width >= 761px) {
+    .speaker-repeater-header {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .speaker-kicker {
+    margin: 0 0 6px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: var(--tracking-wide-sm);
+    text-transform: uppercase;
+    color: var(--color-brand-700);
+  }
+
+  .speaker-card {
+    padding: 16px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: rgb(255 255 255 / 0.72);
+  }
+
+  .speaker-card-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  @media (width >= 761px) {
+    .speaker-card-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .speaker-remove-button {
+    padding: 8px 14px;
+    border: 1px solid rgb(18 33 43 / 0.12);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.9);
+    color: var(--color-accent-500);
+    font-weight: 700;
+  }
+
+  .speaker-add-button {
+    min-height: 42px;
+  }
+
+  .speaker-file-chip {
+    display: grid;
+    gap: 4px;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-tint);
+  }
+
+  .speaker-file-chip span {
+    font-size: 0.9rem;
+    color: var(--color-ink-muted);
+  }
+
+  /* --- Summary ------------------------------------------------------------- */
+
+  .summary-shell {
+    margin-top: 24px;
+    padding: clamp(24px, 4vw, 38px);
+  }
+
+  .summary-card {
+    margin-top: 22px;
+    padding: clamp(22px, 3vw, 30px);
+  }
+
+  .summary-header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (width >= 761px) {
+    .summary-header {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+  }
+
+  .summary-header h3 {
+    font-size: clamp(1.9rem, 4vw, 2.7rem);
+  }
+
+  .summary-grid {
+    display: grid;
+    gap: 18px;
+    margin-top: 22px;
+  }
+
+  .summary-block {
+    padding: 22px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface-subtle);
+  }
+
+  .summary-block h4 {
+    margin-bottom: 14px;
+    font-size: 1.3rem;
+    letter-spacing: var(--tracking-tightest);
+  }
+
+  .summary-row {
+    display: grid;
+    gap: 4px;
+    padding: 12px 0;
+    border-top: 1px solid var(--color-line-soft);
+  }
+
+  .summary-row:first-of-type {
+    border-top: 0;
+  }
+
+  /* Replaces the old \n -> <br> string surgery. */
+  .summary-row span {
+    white-space: pre-line;
+  }
+
+  .summary-note {
+    margin: 0;
+    color: var(--color-ink-muted);
+  }
+}
+
+@layer components {
+  /* --- Ops shell ----------------------------------------------------------- */
+
+  .ops-shell {
+    width: min(100% - 20px, 100%);
+    margin: 0 auto;
+    padding: 18px 0 48px;
+  }
+
+  @media (width >= 761px) {
+    .ops-shell {
+      width: min(1440px, calc(100% - 40px));
+      padding: 26px 0 64px;
+    }
+  }
+
+  /* One recipe behind every ops card. */
+  .ops-card {
+    border: 1px solid var(--color-ops-line);
+    border-radius: var(--radius-2xl);
+    background: linear-gradient(180deg, rgb(31 37 44 / 0.92), rgb(22 28 35 / 0.96));
+    box-shadow: var(--shadow-ops-card);
+  }
+
+  .ops-panel {
+    padding: 18px;
+    margin-bottom: 22px;
+  }
+
+  @media (width >= 761px) {
+    .ops-panel {
+      padding: 22px;
+    }
+  }
+
+  .ops-panel h2 {
+    color: var(--color-ops-ink-hi);
+  }
+
+  .ops-panel p {
+    color: var(--color-ops-ink-64);
+  }
+
+  .ops-kicker,
+  [data-theme="ops"] .eyebrow {
+    margin: 0 0 10px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: var(--tracking-widest-sm);
+    text-transform: uppercase;
+    color: var(--color-ops-kicker);
+  }
+
+  .ops-topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 0 0 18px;
+    border-bottom: 1px solid var(--color-ops-line);
+  }
+
+  .ops-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+
+  .ops-brand-mark {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-xs);
+    background: linear-gradient(135deg, #0f7a76, #cf6d4c);
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 800;
+    box-shadow: var(--shadow-brand-mark);
+  }
+
+  .ops-brand strong {
+    display: block;
+    font-size: 1.05rem;
+    color: var(--color-ops-ink-hi);
+  }
+
+  .ops-brand small {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.86rem;
+    color: var(--color-ops-ink-62);
+  }
+
+  .ops-userbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+  }
+
+  /* Deliberately gold, not the brand gradient. */
+  .ops-user-chip {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 999px;
+    background: rgb(196 154 70 / 0.18);
+    color: var(--color-ops-chip-gold);
+    font-size: 0.88rem;
+    font-weight: 800;
+  }
+
+  .ops-user-label {
+    font-size: 1.05rem;
+    color: var(--color-ops-ink-hi);
+  }
+
+  .ops-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 26px;
+    padding: 14px 0 0;
+    margin-bottom: 28px;
+  }
+
+  .ops-nav-link {
+    position: relative;
+    padding: 10px 0 14px;
+    color: var(--color-ops-ink-70);
+    font-size: 0.96rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .ops-nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #0f7a76, #cf6d4c);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 180ms ease;
+  }
+
+  .ops-nav-link:hover,
+  .ops-nav-link.is-active {
+    color: #fff;
+  }
+
+  .ops-nav-link:hover::after,
+  .ops-nav-link.is-active::after {
+    transform: scaleX(1);
+  }
+
+  /* --- Ops controls -------------------------------------------------------- */
+
+  .ops-login-shell {
+    display: grid;
+    place-items: center;
+    min-height: calc(100vh - 180px);
+  }
+
+  .ops-login-card {
+    width: min(560px, 100%);
+    padding: 18px;
+  }
+
+  @media (width >= 761px) {
+    .ops-login-card {
+      padding: 34px;
+    }
+  }
+
+  .ops-login-card h1 {
+    font-size: clamp(1.8rem, 3vw, 2.3rem);
+    letter-spacing: var(--tracking-tightest);
+    color: var(--color-ops-ink-hi);
+  }
+
+  .ops-login-card p {
+    color: var(--color-ops-ink-68);
+  }
+
+  .ops-field {
+    display: grid;
+    gap: 8px;
+  }
+
+  .ops-field > span {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-ops-ink-76);
+  }
+
+  .ops-control {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 14px;
+    border: 1px solid var(--color-ops-line-input);
+    border-radius: var(--radius-xs);
+    background: var(--color-ops-surface-3);
+    color: var(--color-ops-ink-hi2);
+    font-family: inherit;
+    font-size: 1rem;
+  }
+
+  .ops-control::placeholder {
+    color: var(--color-ops-ink-38);
+  }
+
+  .ops-control:focus {
+    outline: 2px solid rgb(15 122 118 / 0.35);
+    border-color: var(--color-ops-line-active);
+  }
+
+  .ops-help {
+    color: var(--color-ops-ink-68);
+  }
+
+  /* Ops buttons are 14px rectangles, not pills. */
+  .ops-btn-base {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-xs);
+    font-family: inherit;
+    font-size: 1rem;
+  }
+
+  .ops-primary-button {
+    min-height: 50px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #0f7a76, #cf6d4c);
+    color: #fff;
+    font-weight: 800;
+    box-shadow: var(--shadow-btn-ops);
+  }
+
+  .ops-ghost-button {
+    min-height: 42px;
+    padding: 10px 16px;
+    border: 1px solid var(--color-ops-line-ghost);
+    background: var(--color-ops-surface-3);
+    color: var(--color-ops-ink);
+    font-weight: 700;
+  }
+
+  .ops-primary-button:hover:not(:disabled),
+  .ops-ghost-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  .ops-btn-base:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+@layer components {
+  /* --- Ops data display ----------------------------------------------------- */
+
+  .ops-category-tabs {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  .ops-metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .ops-analytics-grid,
+  .ops-donut-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  @media (width >= 901px) {
+    .ops-analytics-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+    .ops-donut-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* Original: 4 tabs / 6 metrics by default, 2 / 3 below 1200px, 1 below 760px. */
+  @media (width >= 761px) {
+    .ops-category-tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .ops-metrics-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (width >= 1201px) {
+    .ops-category-tabs {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .ops-metrics-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
+  .ops-category-tab {
+    display: grid;
+    gap: 8px;
+    justify-items: start;
+    padding: 18px 20px;
+    border: 1px solid var(--color-ops-line);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgb(31 37 44 / 0.92), rgb(22 28 35 / 0.96));
+    box-shadow: var(--shadow-ops-tab);
+    color: var(--color-ops-ink);
+    text-align: left;
+  }
+
+  .ops-category-tab strong {
+    font-size: 2rem;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .ops-category-tab span,
+  .ops-category-tab small {
+    font-weight: 700;
+    color: var(--color-ops-ink-60);
+  }
+
+  .ops-category-tab.is-active {
+    border-color: var(--color-ops-line-active);
+    background:
+      radial-gradient(circle at top right, rgb(15 122 118 / 0.12), transparent 30%),
+      linear-gradient(180deg, rgb(31 37 44 / 0.96), rgb(20 25 31 / 1));
+    box-shadow: var(--shadow-ops-tab-active);
+  }
+
+  .ops-metric-card {
+    padding: 18px;
+  }
+
+  .ops-metric-card strong {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: clamp(2rem, 3.4vw, 2.75rem);
+    line-height: 1;
+    color: #fff;
+  }
+
+  .ops-metric-card p {
+    margin: 8px 0 0;
+    color: var(--color-ops-ink-56);
+  }
+
+  .ops-filter-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  @media (width >= 761px) {
+    .ops-filter-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width >= 1201px) {
+    .ops-filter-row {
+      grid-template-columns: minmax(240px, 1.5fr) repeat(3, minmax(160px, 1fr)) auto;
+      align-items: end;
+    }
+  }
+
+  .ops-filter {
+    display: grid;
+    gap: 8px;
+  }
+
+  .ops-filter > span {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--color-ops-ink-62);
+  }
+
+  /* overflow:hidden is what rounds the table corners. */
+  .ops-table-shell {
+    overflow-x: auto;
+    border: 1px solid var(--color-ops-line);
+    border-radius: var(--radius-lg);
+  }
+
+  .ops-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-ops-surface-2);
+  }
+
+  .ops-table th,
+  .ops-table td {
+    padding: 16px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-ops-line);
+  }
+
+  .ops-table th {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: var(--tracking-wider-sm);
+    text-transform: uppercase;
+    color: var(--color-ops-ink-56);
+  }
+
+  .ops-table td {
+    color: var(--color-ops-ink);
+    vertical-align: top;
+  }
+
+  .ops-table td strong {
+    display: block;
+  }
+
+  .ops-table td small {
+    display: block;
+    margin-top: 6px;
+    max-width: 36ch;
+    color: var(--color-ops-ink-56);
+  }
+
+  .ops-empty-cell {
+    display: grid;
+    place-items: center;
+    min-height: 160px;
+    color: var(--color-ops-ink-56);
+  }
+
+  /* --- Status + priority pills --------------------------------------------- */
+
+  .ops-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--color-ops-surface-6);
+    color: var(--color-ops-ink-hi2);
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .ops-table-select {
+    min-height: 38px;
+    width: auto;
+    padding: 8px 12px;
+    border: 1px solid var(--color-ops-line);
+    border-radius: 999px;
+    background-color: var(--color-ops-surface-5);
+    color: var(--color-ops-ink);
+    font-family: inherit;
+    font-size: 0.84rem;
+    font-weight: 800;
+  }
+
+  .ops-status-will-do,
+  .ops-priority-standard {
+    background-color: var(--color-info-bg);
+    color: var(--color-info-text);
+  }
+
+  .ops-status-ongoing,
+  .ops-priority-high-touch {
+    background-color: var(--color-warn-bg);
+    color: var(--color-warn-text);
+  }
+
+  .ops-priority-fast-turnaround {
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger-text);
+  }
+
+  /* The original disagreed with itself here: the pill was green and the select
+     was red. Green wins - Completed is a success state. */
+  .ops-status-completed {
+    background-color: var(--color-success-bg);
+    color: var(--color-success-text);
+  }
+
+  /* --- Bars, donuts, timeline, archive -------------------------------------- */
+
+  .ops-bar-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .ops-bar-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  @media (width >= 901px) {
+    .ops-bar-copy {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .ops-bar-copy strong {
+    color: var(--color-ops-ink-hi2);
+  }
+
+  .ops-bar-copy span {
+    color: var(--color-ops-ink-58);
+  }
+
+  .ops-bar-track {
+    height: 10px;
+    border-radius: 999px;
+    background: var(--color-ops-surface-6);
+    overflow: hidden;
+  }
+
+  /* One hue: every bar is directly labelled, so colour is not carrying
+     identity and a per-bar palette would only encode sort order. */
+  .ops-bar-fill {
+    height: 100%;
+    min-width: 4px;
+    border-radius: inherit;
+    background: var(--color-chart-bar);
+    transition: width 180ms ease;
+  }
+
+  .ops-donut-card {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    padding: 18px;
+    border: 1px solid var(--color-ops-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-ops-surface-3);
+    text-align: center;
+  }
+
+  /* A real conic-gradient arc; the original rendered a static ring. */
+  .ops-donut-ring {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 108px;
+    height: 108px;
+    border-radius: 50%;
+    background: conic-gradient(var(--donut-color, #0f7a76) calc(var(--donut-value, 0) * 1%), rgb(255 255 255 / 0.08) 0);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.04);
+  }
+
+  .ops-donut-ring::after {
+    content: "";
+    position: absolute;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: #171d24;
+  }
+
+  .ops-donut-value {
+    position: relative;
+    z-index: 1;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .ops-mini-timeline {
+    display: grid;
+    gap: 14px;
+  }
+
+  .ops-timeline-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  @media (width >= 901px) {
+    .ops-timeline-copy {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .ops-archive-groups {
+    display: grid;
+    gap: 18px;
+  }
+
+  .ops-archive-group {
+    padding: 18px;
+    border: 1px solid var(--color-ops-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-ops-surface-2);
+  }
+
+  .ops-archive-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .ops-archive-header h3 {
+    font-size: 1.25rem;
+    letter-spacing: var(--tracking-tight-sm);
+    color: var(--color-ops-ink-hi2);
+  }
+
+  .ops-archive-header span {
+    font-weight: 700;
+    color: var(--color-ops-ink-58);
+  }
+
+  .ops-archive-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .ops-archive-card,
+  .ops-archive-empty {
+    padding: 16px;
+    border: 1px solid var(--color-ops-line);
+    border-radius: var(--radius-sm);
+    background: var(--color-ops-surface-3);
+  }
+
+  .ops-archive-card strong {
+    display: block;
+    color: var(--color-ops-ink-hi2);
+  }
+
+  .ops-archive-card span,
+  .ops-archive-empty {
+    color: var(--color-ops-ink-68);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Print. The original had no print rules at all, so printing dumped the whole
+   page: topbar, hero, progress strip and the still-visible form.
+--------------------------------------------------------------------------- */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  body,
+  body[data-theme="ops"] {
+    background: #fff !important;
+    color: #12212b !important;
+  }
+
+  .ambient-layer,
+  .topbar,
+  .progress-strip,
+  .hero-panel-clean,
+  .step-actions,
+  .action-bar,
+  .form-shell,
+  .no-print {
+    display: none !important;
+  }
+
+  .app-shell {
+    width: 100%;
+    padding: 0;
+  }
+
+  .summary-shell,
+  .summary-card,
+  .summary-block {
+    margin: 0;
+    border: 1px solid #ddd;
+    background: #fff !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    break-inside: avoid;
+  }
+
+  .summary-row {
+    break-inside: avoid;
+  }
+
+  a {
+    text-decoration: underline;
+    color: #0a5d61 !important;
+  }
+}
