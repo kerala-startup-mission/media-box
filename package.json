@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "test": "node apps-script/test/auth.test.mjs && node apps-script/test/roundtrip.test.mjs",
     "mock": "node dev/mock-backend.mjs",
-    "e2e": "node dev/e2e.mjs"
+    "e2e": "node dev/e2e.mjs",
+    "build:preview": "bash dev/build-preview.sh",
+    "preview:check": "node dev/preview-check.mjs"
   },
   "dependencies": {
     "pinia": "^4.0.3",

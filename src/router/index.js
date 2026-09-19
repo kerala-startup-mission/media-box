@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 
 import IntakeView from "@/views/IntakeView.vue";
 
@@ -30,7 +30,12 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  /*
+   * Production uses history mode, which needs the server to fall back to
+   * index.html (see README). A preview build is served as plain static files
+   * with no such rewrite, so it uses hash routing instead.
+   */
+  history: import.meta.env.VITE_DEMO === "1" ? createWebHashHistory() : createWebHistory(),
   routes,
   scrollBehavior: () => ({ top: 0 })
 });

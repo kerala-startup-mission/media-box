@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
 
 import AdminGate from "@/components/ops/AdminGate.vue";
 import DonutStat from "@/components/ops/DonutStat.vue";
@@ -14,10 +14,22 @@ import { useWorkflowStore } from "@/stores/workflow.js";
 const auth = useAuthStore();
 const workflow = useWorkflowStore();
 
-onMounted(async () => {
-  await auth.ensureVerified();
-  if (auth.isAdmin) await workflow.load();
+onMounted(() => {
+  auth.ensureVerified();
 });
+
+/*
+ * Load when the account becomes an admin, not only at mount. Someone landing
+ * here signed out is not an admin yet; the verdict arrives after they sign in,
+ * and onMounted has long since run by then.
+ */
+watch(
+  () => auth.isAdmin,
+  (isAdmin) => {
+    if (isAdmin) workflow.load();
+  },
+  { immediate: true }
+);
 
 const tasks = computed(() => workflow.tasks);
 const active = computed(() => workflow.activeTasks);
